@@ -43,6 +43,35 @@ from strings import get_string
 checker = {}
 upvoters = {}
 
+import os
+from pyrogram import filters
+from pyrogram.types import InputMediaVideo, InlineKeyboardMarkup, InlineKeyboardButton
+
+Ananya_Repo = "https://files.catbox.moe/vnmzyi.mp4"
+
+@app.on_callback_query(filters.regex("panel"))
+async def show_video_callback(_, query):
+    await query.answer()
+    try:
+        video_link = os.getenv("ANANYA_REPO", Ananya_Repo)
+
+        await query.message.edit_media(
+            media=InputMediaVideo(
+                media=video_link,
+                has_spoiler=True,
+            ),
+            reply_markup=InlineKeyboardMarkup(
+                [
+                    [
+                        InlineKeyboardButton(
+                            text="‹ ʙᴀᴄᴋ", callback_data="settingsback_helper"
+                        )
+                    ]
+                ]
+            ),
+        )
+    except Exception as e:
+        await query.message.reply_text(f"Failed to show video: {e}")
 
 @app.on_callback_query(filters.regex("ADMIN") & ~BANNED_USERS)
 @languageCB
